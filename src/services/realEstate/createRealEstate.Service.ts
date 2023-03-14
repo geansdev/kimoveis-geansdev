@@ -2,10 +2,11 @@ import { Repository } from "typeorm";
 import { AppDataSource } from "../../data-source";
 import { Address, Category, RealEstate } from "../../entities";
 import { AppError } from "../../errors";
+import { TRealEstateBoby } from "../../interfaces/users.intefaces";
 
 const createRealEstateService = async (
-  realEstateData: any
-): Promise<RealEstate[]> => {
+  realEstateData: TRealEstateBoby
+): Promise<RealEstate> => {
   const realEstateRepository: Repository<RealEstate> =
     AppDataSource.getRepository(RealEstate);
 
@@ -26,7 +27,7 @@ const createRealEstateService = async (
     throw new AppError("Address already exists", 409);
   }
 
-  const createAdress: Address[] = addressRepository.create(
+  const createAdress: Address = addressRepository.create(
     realEstateData.address
   );
 
@@ -40,7 +41,7 @@ const createRealEstateService = async (
     throw new AppError("Category not found", 404);
   }
 
-  const createRealEstate: RealEstate[] = realEstateRepository.create({
+  const createRealEstate: RealEstate = realEstateRepository.create({
     ...realEstateData,
     address: createAdress,
     category: categoryFind,
